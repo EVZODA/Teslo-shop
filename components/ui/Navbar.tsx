@@ -1,9 +1,17 @@
 import NextLink from 'next/link'
 import { AppBar, Box, Button, IconButton, Link, Toolbar, Typography, Badge } from "@mui/material"
 import { SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
+import { useRouter } from 'next/router';
+import { UiContext } from '../../context';
+import { useContext } from 'react';
 
 
 export const Navbar = () => {
+
+    const { asPath, push } = useRouter();
+
+    const {toogleSideMenu} = useContext(UiContext)
+
   return (
    <AppBar>
     <Toolbar>
@@ -18,27 +26,21 @@ export const Navbar = () => {
         <Box flex={1} />
 
         <Box sx={{display:{xs:'none', sm:'block'}}}>
-            <NextLink href="/caregory/men" passHref legacyBehavior>
+            <NextLink href="/category/men" passHref legacyBehavior>
                 <Link >
-                <Button>Hombres</Button>
+                <Button color={asPath==="/category/men"?"primary":"info"} >Hombres</Button>
                 </Link>
             </NextLink>
 
-            <NextLink href="/caregory/women" passHref legacyBehavior>
+            <NextLink href="/category/women" passHref legacyBehavior>
                 <Link>
-                <Button>Mujeres</Button>
+                <Button color={asPath==="/category/women"?"primary":"info"}>mujeres</Button>
                 </Link>
             </NextLink>
 
-            <NextLink href="/caregory/kid" passHref legacyBehavior>
+            <NextLink href="/category/kid" passHref legacyBehavior>
                 <Link>
-                <Button>Niños</Button>
-                </Link>
-            </NextLink>
-
-            <NextLink href="/caregory/unisex" passHref legacyBehavior>
-                <Link>
-                <Button>Unisex</Button>
+                <Button color={asPath==="/category/kid"?"primary":"info"}>Niños</Button>
                 </Link>
             </NextLink>
             </Box>
@@ -59,7 +61,7 @@ export const Navbar = () => {
                 </Link>
             </NextLink>
 
-            <Button>
+            <Button onClick={toogleSideMenu}>
                 Menu
             </Button>
 
