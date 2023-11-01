@@ -1,5 +1,6 @@
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import { ShopLayout } from "../../../components/layouts"
+import { GetServerSideProps } from "next"
 
 
 const AddressPage = () => {
@@ -54,3 +55,14 @@ const AddressPage = () => {
 }
 
 export default AddressPage
+
+
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+
+
+//     return {
+//         props:{
+
+//         }
+//     }
+// } no conviene hacerlo porque forzas el servidor

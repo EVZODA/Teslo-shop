@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db, seedData } from '../../../database'
-import Product from '../../../models/Product';
+import { User, Product } from '../../../models';
 
 type Data = {
     message: string
@@ -12,7 +12,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return res.status(401).json({ message: 'No tiene acceso a este servicio' });
     }
 
+
     await db.connect();
+    await User.deleteMany()
+    await User.insertMany( seedData.initialData.users );
+
     await Product.deleteMany();
     await Product.insertMany( seedData.initialData.products );
     await db.disconnect();

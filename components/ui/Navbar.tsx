@@ -1,16 +1,28 @@
 import NextLink from 'next/link'
-import { AppBar, Box, Button, IconButton, Link, Toolbar, Typography, Badge } from "@mui/material"
-import { SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
+import { AppBar, Box, Button, IconButton, Link, Toolbar, Typography, Badge, Input, InputAdornment } from "@mui/material"
+import { ClearOutlined, Search, SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
 import { useRouter } from 'next/router';
-import { UiContext } from '../../context';
-import { useContext } from 'react';
+import { CartContext, UiContext } from '../../context';
+import { useContext, useState } from 'react';
 
 
 export const Navbar = () => {
 
     const { asPath, push } = useRouter();
 
-    const {toogleSideMenu} = useContext(UiContext)
+    const {toogleSideMenu, isMenuOpen} = useContext(UiContext)
+    const {numberOfitems} = useContext(CartContext)
+    const [searchTerm, setSearchTerm] = useState('')
+    const [searchVisible, setSearchVisible] = useState(false)
+    
+
+    const onSearchTerm = () => {
+        if (searchTerm.trim().length===0) return 
+        push(`/search/${searchTerm}`)
+    }
+
+
+    
 
   return (
    <AppBar>
@@ -25,7 +37,7 @@ export const Navbar = () => {
 
         <Box flex={1} />
 
-        <Box sx={{display:{xs:'none', sm:'block'}}}>
+        <Box sx={{display: searchVisible ? "none" : {xs:'none', sm:'block'}}}  className='fadeIn'>
             <NextLink href="/category/men" passHref legacyBehavior>
                 <Link >
                 <Button color={asPath==="/category/men"?"primary":"info"} >Hombres</Button>
@@ -47,14 +59,53 @@ export const Navbar = () => {
 
         <Box flex={1} />
 
-        <IconButton>
+     {
+        searchVisible
+        ?
+        (
+<Input
+
+                    sx={{display:{xs:'none', sm:'flex'}}}
+                    className='fadeIn'
+                    autoFocus
+                        type='text'
+                        value={searchTerm}
+                        onChange={(e)=>setSearchTerm(e.target.value)}
+                        onKeyUp={(e) => e.key === "Enter" ? onSearchTerm() : null}
+                        placeholder="Buscar..."
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                               onClick={()=>(setSearchVisible(false))}
+                                >
+                                 <ClearOutlined />
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+        ) : (
+            <IconButton
+            className='fadeIn'
+            onClick={()=>(setSearchVisible(true))}
+            sx={{display:{xs:'none', sm: "flex"}}}
+            >
+                <SearchOutlined/>
+            </IconButton>
+        )
+     }
+
+
+
+        <IconButton sx={{display:{xs:'flex', sm: "none"}}}
+        onClick={toogleSideMenu}
+        >
             <SearchOutlined/>
         </IconButton>
 
         <NextLink href="/cart" passHref legacyBehavior>
                 <Link>
                 <IconButton>
-                    <Badge badgeContent={2} color='secondary'>
+                    <Badge badgeContent={numberOfitems>9?"+9":numberOfitems} color='secondary'>
                         <ShoppingCartOutlined/>
                     </Badge>
                 </IconButton>
